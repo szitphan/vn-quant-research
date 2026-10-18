@@ -47,7 +47,13 @@ Ghi **mọi** lần thử, kể cả thất bại và phần khám phá ngoài n
 
 - Train và val không đồng thuận về H (train thích H=1).
 - t-stat val chỉ 1.18.
-- Chi phí ăn 6–9%/năm.
+- Chi phí ăn 3.4–3.9%/năm, trượt giá ×3 thì 6.9%/năm. _Bản trước ghi 6–9% do lỗi metric, xem đính chính 2026-10-18._
+
+## 2026-10-18 — Đính chính metric chi phí
+
+- **Lỗi:** `cost_drag_ann` chia tổng chi phí cho **vốn ban đầu**. Nhưng backtest size theo equity, số hợp đồng tăng khi equity tăng, nên chi phí ở giai đoạn sau bị phóng đại. Đã sửa thành chi phí / equity hôm trước, cùng mẫu số với `ret`.
+- **Alpha 2:** train 5.6% → 3.9%, val 8.7% → 3.4%. Ở val, trượt giá ×2 / ×3: 11.9% / 13.9% → 5.1% / 6.9%.
+- **Phạm vi:** chỉ dòng `cost_drag_ann` thay đổi. Sharpe, CAGR, max DD và scorecard giữ nguyên, không quyết định nào thay đổi. Chỉ chạy lại trên train + val, OOS vẫn khoá.
 
 ## OOS
 

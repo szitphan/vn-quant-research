@@ -3,3 +3,4 @@ __pycache__/
 .DS_Store
 # dữ liệu clean sinh lại được từ raw; raw là snapshot cần giữ để tái lập kết quả
 data/clean/
+.venv/
