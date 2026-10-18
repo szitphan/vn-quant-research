@@ -6,7 +6,7 @@ Ghi **mọi** lần thử, kể cả thất bại và phần khám phá ngoài n
 
 ---
 
-## 2026-10-18 — Khởi tạo, data
+## 2026-10-16 — Khởi tạo, data
 
 - **Data:** VN30F1M, VN30F2M, VN30 từ VNDirect, SSI, Entrade (08/2017 → 12/2025). Lỗi vendor tìm được:
   - SSI thiếu 6 phiên F1M; VNDirect thiếu 2021-04-29.
@@ -19,31 +19,32 @@ Ghi **mọi** lần thử, kể cả thất bại và phần khám phá ngoài n
   - VN30F2005 đóng cửa trần 864 ngày đáo hạn 21/05/2020, trong khi VN30 là 815.55.
 - **Roll:** chuỗi nối ngây thơ sai trung bình 0.81%, tối đa 8.83% mỗi ngày roll. Đã điều chỉnh bằng F2M.
 
-## 2026-10-18 — Alpha 1: breakout momentum
+## 2026-10-16 — Alpha 1: breakout momentum
 
-| Giai đoạn | Thử | Kết quả |
-|---|---|---|
-| train | Event study: N ∈ {10,20,40} × H ∈ {1,2,3,5} × {up→long, down→short} = 24 ô | Up → long dương (t 2.3–2.9 ở H=2). Down → short âm, tức là VN hồi lại sau thủng đáy. |
-| train | Khám phá ngoài notebook: 6 định nghĩa F1 × 3 N ở H=2 (close>max close, close>max high, +vol>1.2, +CLV>0.7, breakout đầu tiên trong 5 phiên, vượt 0.5 ATR) | Volume xác nhận cho excess cao nhất (+27 đến +52 bps) nhưng ít mẫu (34–50). |
-| train | Rule A (đối xứng), B (chỉ long), C (long + vol>1.2), N=20, H=2 | Sharpe 0.60 / 0.47 / 1.10. Chọn C. |
-| train | Volume tổng F1M+F2M (khử méo chu kỳ roll); ngưỡng 1.0 vs 1.2 | Không cải thiện. Ở ngưỡng 1.0 edge gần như biến mất, quá nhạy với tham số. |
-| val | 9 config N × H | Sharpe val −0.33 → 0.48. Config chọn (N=40, H=2): 5 lệnh, t 0.67. |
+| Giai đoạn | Thử                                                                                                                                                                    | Kết quả                                                                                          |
+| ----------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------- |
+| train       | Event study: N ∈ {10,20,40} × H ∈ {1,2,3,5} × {up→long, down→short} = 24 ô                                                                                       | Up → long dương (t 2.3–2.9 ở H=2). Down → short âm, tức là VN hồi lại sau thủng đáy. |
+| train       | Khám phá ngoài notebook: 6 định nghĩa F1 × 3 N ở H=2 (close>max close, close>max high, +vol>1.2, +CLV>0.7, breakout đầu tiên trong 5 phiên, vượt 0.5 ATR) | Volume xác nhận cho excess cao nhất (+27 đến +52 bps) nhưng ít mẫu (34–50).               |
+| train       | Rule A (đối xứng), B (chỉ long), C (long + vol>1.2), N=20, H=2                                                                                                      | Sharpe 0.60 / 0.47 / 1.10. Chọn C.                                                                |
+| train       | Volume tổng F1M+F2M (khử méo chu kỳ roll); ngưỡng 1.0 vs 1.2                                                                                                      | Không cải thiện. Ở ngưỡng 1.0 edge gần như biến mất, quá nhạy với tham số.           |
+| val         | 9 config N × H                                                                                                                                                         | Sharpe val −0.33 → 0.48. Config chọn (N=40, H=2): 5 lệnh, t 0.67.                              |
 
 **Quyết định:** FAIL validation (tiêu chí 1, 2, 3). Không đưa vào OOS.
 **Ý tưởng tiếp:** breakout trên VN30 spot + breadth thị trường; hoặc dùng làm bộ lọc cho alpha khác.
 
-## 2026-10-18 — Alpha 2: basis carry
+## 2026-10-17 — Alpha 2: basis carry
 
-| Giai đoạn | Thử | Kết quả |
-|---|---|---|
-| train | Basis chia 5 nhóm × H ∈ {1,2,3} | Đơn điệu: Q1 (chiết khấu sâu) +34 bps phiên sau, Q5 −13 bps. HĐTL hội tụ về spot, spot không đi theo HĐTL. |
-| train | Khám phá: carry ngưỡng 5/10/20 bps/ngày | t = 3.24 / 2.38 / 1.68 |
-| train | Rule A (basis θ=0.5%), B (carry θ=5 bps/ngày), H=1 | Sharpe 0.88 / 1.46. Chọn B. |
-| val | 9 config θ × H | Cả 9 ô dương (0.11 → 0.84). Plateau chọn θ=5 bps, H=3. Sharpe val 0.84, CAGR 15.7%, max DD −16.3%. |
-| val | Tách chân long/short; beta; trượt giá ×1/×2/×3 | Hai chân luân phiên gánh nhau. Beta val 0.53. Trượt giá ×3 vẫn còn Sharpe 0.64. |
+| Giai đoạn | Thử                                                   | Kết quả                                                                                                                  |
+| ----------- | ------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------- |
+| train       | Basis chia 5 nhóm × H ∈ {1,2,3}                     | Đơn điệu: Q1 (chiết khấu sâu) +34 bps phiên sau, Q5 −13 bps. HĐTL hội tụ về spot, spot không đi theo HĐTL. |
+| train       | Khám phá: carry ngưỡng 5/10/20 bps/ngày           | t = 3.24 / 2.38 / 1.68                                                                                                     |
+| train       | Rule A (basis θ=0.5%), B (carry θ=5 bps/ngày), H=1  | Sharpe 0.88 / 1.46. Chọn B.                                                                                               |
+| val         | 9 config θ × H                                       | Cả 9 ô dương (0.11 → 0.84). Plateau chọn θ=5 bps, H=3. Sharpe val 0.84, CAGR 15.7%, max DD −16.3%.                 |
+| val         | Tách chân long/short; beta; trượt giá ×1/×2/×3 | Hai chân luân phiên gánh nhau. Beta val 0.53. Trượt giá ×3 vẫn còn Sharpe 0.64.                                  |
 
 **Quyết định:** PASS 5/5 tiêu chí, là ứng viên OOS duy nhất.
 **Rủi ro ghi nhận:**
+
 - Train và val không đồng thuận về H (train thích H=1).
 - t-stat val chỉ 1.18.
 - Chi phí ăn 6–9%/năm.
